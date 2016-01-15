@@ -420,7 +420,6 @@ uint8_t KeyDuino::mifareclassic_AuthenticateBlock (uint8_t *uid, uint8_t uidLen,
         pn532_packetbuffer[10 + i] = _uid[i];              /* 4 bytes card ID */
     }
 
-PrintHex(pn532_packetbuffer, sizeof(pn532_packetbuffer));
     if (HAL(writeCommand)(pn532_packetbuffer, 10 + _uidLen))
         return 0;
 
@@ -1087,7 +1086,11 @@ int8_t KeyDuino::receive(uint8_t *buf, int len, uint16_t timeout)
 }
 
 /**
-    @brief  try authentication with mifare classic default keys
+    @brief    try authentication with mifare classic default keys
+
+    @param    sector  the sector number to authenticate to
+
+    @returns  1 if authentication succeeded, 0 if it failed 
 */
 bool KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
     uint8_t authentication;
@@ -1099,7 +1102,6 @@ bool KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
         for (int j = 0 ; j < 6 ; j++) {
             key[j] = this->mifareClassicDefaultKeys[i][j];
         }
-    	this->PrintHex(this->_uid, 6);
 	keyType = 0;
         authentication = this->mifareclassic_AuthenticateBlock(this->_uid, this->_uidLen, 4 * sector, keyType, key); //First try with A key
         if (authentication)
