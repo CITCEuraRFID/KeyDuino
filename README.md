@@ -1,4 +1,4 @@
-## KeyDuino Libray
+## KeyDuino Library
 
 
 ### Contribution
