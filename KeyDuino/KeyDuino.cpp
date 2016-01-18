@@ -1092,7 +1092,7 @@ int8_t KeyDuino::receive(uint8_t *buf, int len, uint16_t timeout)
 
     @returns  1 if authentication succeeded, 0 if it failed 
 */
-bool KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
+uint8_t KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
     uint8_t authentication;
     uint8_t key[6];
     int keyType;
@@ -1117,13 +1117,13 @@ bool KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
     if (authentication) {
         Serial.print("Authentication succeeded on sector ");
         Serial.print(sector);
-        Serial.print(" with key ");
+        Serial.print(" with default key ");
         if(!keyType)
-            Serial.print("A : ");
+            Serial.print("A :");
     	else
-      	    Serial.print("B : ");
+      	    Serial.print("B :");
     	this->PrintHex(key, 6);
-    	return true;
+    	return true; 	
     }
 
     Serial.print("Failed authentication on sector ");
@@ -1131,3 +1131,38 @@ bool KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
     Serial.println(" with default keys.");
     return false;
 }
+
+
+/**
+    @brief    read the mifare classic card ID
+
+    @param    uid  the var to write the uid
+    @param    uidLen  the var to write the uid
+
+    @returns  1 if the ID was correctly read, 0 if reading failed
+*/
+uint8_t MifareClassicKeyDuino::mifareclassic_ReadTargetID(uint8_t *uid, uint8_t *uidLength){
+    return readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, uidLength);
+}
+
+
+/**
+    @brief    read and print a whole sector you authenticated to
+
+    @param    sector  the sector number to read
+*/
+void MifareClassicKeyDuino::mifareclassic_ReadSector(uint8_t sector){
+    uint8_t reading;
+    uint8_t data[16];
+    for (int block = 4 * sector ; block < 4 * sector + 4 ; block++) {
+        reading = this->mifareclassic_ReadDataBlock(block, data);
+        if (reading) 
+            this->PrintHex(data,16);
+        else {
+      	    Serial.print("   Failed reading block ");
+      	    Serial.println(block);
+    }
+  }
+  Serial.println();
+}
+

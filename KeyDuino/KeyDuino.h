@@ -105,8 +105,10 @@
 #define PN532_GPIO_P34                      (4)
 #define PN532_GPIO_P35                      (5)
 
-//Default Keys
-#define DEFAULT_KEY_NUMBER 		    8
+//Mifare Keys
+#define DEFAULT_KEY_NUMBER 		    (8)
+#define MIFARE_KEY_A			    (0)
+#define MIFARE_KEY_B			    (1)
 
 
 class KeyDuino: public PN532Interface { 
@@ -156,11 +158,12 @@ uint8_t mifareClassicDefaultKeys[DEFAULT_KEY_NUMBER][6] = {
     bool mifareclassic_IsFirstBlock (uint32_t uiBlock);
     bool mifareclassic_IsTrailerBlock (uint32_t uiBlock);
     uint8_t mifareclassic_AuthenticateBlock (uint8_t *uid, uint8_t uidLen, uint32_t blockNumber, uint8_t keyNumber, uint8_t *keyData);
+    uint8_t mifareclassic_AuthenticateSectorDefaultKeys (uint8_t sector);
     uint8_t mifareclassic_ReadDataBlock (uint8_t blockNumber, uint8_t *data);
+    void mifareclassic_ReadSector (uint8_t sector);
     uint8_t mifareclassic_WriteDataBlock (uint8_t blockNumber, uint8_t *data);
     uint8_t mifareclassic_FormatNDEF (void);
     uint8_t mifareclassic_WriteNDEFURI (uint8_t sectorNumber, uint8_t uriIdentifier, const char *url);
-    bool mifareclassic_AuthenticateSectorDefaultKeys (uint8_t sector);
 
     // Mifare Ultralight functions
     uint8_t mifareultralight_ReadPage (uint8_t page, uint8_t *buffer);
@@ -194,13 +197,16 @@ public:
     using KeyDuino::getFirmwareVersion;
     using KeyDuino::readPassiveTargetID;
     using KeyDuino::mifareclassic_AuthenticateBlock;
+    using KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys;
     using KeyDuino::mifareclassic_ReadDataBlock;
     using KeyDuino::mifareclassic_WriteDataBlock;
     using KeyDuino::mifareclassic_FormatNDEF;
     using KeyDuino::mifareclassic_WriteNDEFURI;
-    using KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys;
     using KeyDuino::PrintHex;
     using KeyDuino::PrintHexChar;
+
+    uint8_t mifareclassic_ReadTargetID(uint8_t *uid, uint8_t *uidLength);
+    void mifareclassic_ReadSector(uint8_t sector);
 };
 
 #endif
