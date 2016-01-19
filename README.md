@@ -1,7 +1,7 @@
 ## KeyDuino Library
 
 ### Tutorials & Projects
-If you want to discover what you can do with your KeyDuino, join http://keyduino.forumsactifs.com/!
+If you want to discover what you can do with your KeyDuino, join http://keyduino.forumsactifs.com/ !
 There you will find projects ideas, discussions, and tutorials, to help you get the best from your KeyDuino.
 If you have ideas to share, don't hesitate! We would be very glad to hear from you.
 
