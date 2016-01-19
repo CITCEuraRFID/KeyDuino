@@ -40,6 +40,9 @@ uint8_t definedKeysB[16][6] = {
   { 0x48, 0x45, 0x58, 0x41, 0x43, 0x54 }
 };
 
+uint8_t zeroData[16] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t trailerBlockData[16] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x07, 0x80, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+
 MifareClassicKeyDuino keyDuino;
 
 uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 }; 
@@ -51,26 +54,39 @@ void setup(void) {
   keyDuino.begin();
 
   keyDuino.SAMConfig();
+  
+  Serial.println("/!\ Warning! /!\\");
+  Serial.println("Be sure to know what you are doing when writing on a card!");
+  Serial.println("Remember a wrong usage can lead you to make the card unusable ...");
+  Serial.println("/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\\");
 }
 
 void loop(void) {
   uint8_t success;
-
-  success = keyDuino.readTargetID(uid, &uidLength);
+  success = keyDuino.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
 
   if (success) {
     if (uidLength == 4) {
-      Serial.print("Mifare Classic identified: UID: ");
-      keyDuino.PrintHex(uid, uidLength);
-      
-      for (int i = 0 ; i < 16 ; i++) { // 16 if card is Mifare 1K, 64 if Mifare 4K
-        if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) || keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) || keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i)) //Try authentication with defined key A, then B, then default keys
-            keyDuino.readSector(i);       
+      Serial.println("Mifare classic identified");
+      for (int i = 0 ; i < 16 ; i++)
+      {
+        if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) || 
+            keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) || 
+            keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i)) //Try authentication with defined key A, then B, then default keys. Writing won't work if key A has read-only access ... change checking order in that case (B then A).
+        { 
+            for (int j = 0 ; j < 4 ; j++) {
+                int block = i * 4 + j;
+                if (block) //Be sure not to write on Block 0
+                    if(keyDuino.mifareclassic_IsTrailerBlock(block))
+                        keyDuino.mifareclassic_WriteDataBlock(block, trailerBlockData);
+                    else
+                        keyDuino.mifareclassic_WriteDataBlock(block, zeroData);
+                    delay(250);
+          }
+        }
       }
     }
     delay(6000);
   }
 }
-
-
 

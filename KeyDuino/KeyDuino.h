@@ -178,7 +178,7 @@ uint8_t mifareClassicDefaultKeys[DEFAULT_KEY_NUMBER][6] = {
         return pn532_packetbuffer;
     };
     
-private:
+protected:
     HardwareSerial* _serial;
     uint8_t command;
     int8_t readAckFrame();
@@ -196,6 +196,8 @@ public:
     using KeyDuino::SAMConfig;
     using KeyDuino::getFirmwareVersion;
     using KeyDuino::readPassiveTargetID;
+    using KeyDuino::mifareclassic_IsFirstBlock;
+    using KeyDuino::mifareclassic_IsTrailerBlock;
     using KeyDuino::mifareclassic_AuthenticateBlock;
     using KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys;
     using KeyDuino::mifareclassic_ReadDataBlock;
@@ -205,8 +207,10 @@ public:
     using KeyDuino::PrintHex;
     using KeyDuino::PrintHexChar;
 
-    uint8_t mifareclassic_ReadTargetID(uint8_t *uid, uint8_t *uidLength);
-    void mifareclassic_ReadSector(uint8_t sector);
+    uint8_t readTargetID(uint8_t *uid, uint8_t *uidLength);
+    void readSector(uint8_t sector);
+    uint8_t authenticateDefinedKey(uint8_t key[6], int keyType, int sector);
+    uint8_t writeBlock(uint8_t block, uint8_t *data);
 };
 
 #endif

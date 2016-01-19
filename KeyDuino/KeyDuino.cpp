@@ -1141,7 +1141,7 @@ uint8_t KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
 
     @returns  1 if the ID was correctly read, 0 if reading failed
 */
-uint8_t MifareClassicKeyDuino::mifareclassic_ReadTargetID(uint8_t *uid, uint8_t *uidLength){
+uint8_t MifareClassicKeyDuino::readTargetID(uint8_t *uid, uint8_t *uidLength){
     return readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, uidLength);
 }
 
@@ -1151,7 +1151,7 @@ uint8_t MifareClassicKeyDuino::mifareclassic_ReadTargetID(uint8_t *uid, uint8_t 
 
     @param    sector  the sector number to read
 */
-void MifareClassicKeyDuino::mifareclassic_ReadSector(uint8_t sector){
+void MifareClassicKeyDuino::readSector(uint8_t sector){
     uint8_t reading;
     uint8_t data[16];
     for (int block = 4 * sector ; block < 4 * sector + 4 ; block++) {
@@ -1166,3 +1166,63 @@ void MifareClassicKeyDuino::mifareclassic_ReadSector(uint8_t sector){
   Serial.println();
 }
 
+
+/**
+    @brief    authenticate with a defined key, printing the result
+
+    @param    key      the key you are trying to authenticate with
+    @param    keyType  type of key, A or B: use MIFARE_KEY_A or MIFARE_KEY_B
+    @param    sector   the sector you wish to authenticate to
+
+    @returns  1 if authentication succeeded, 0 if it failed
+*/
+uint8_t MifareClassicKeyDuino::authenticateDefinedKey(uint8_t key[6], int keyType, int sector){
+    
+    uint8_t auth = this->mifareclassic_AuthenticateBlock(this->_uid, this->_uidLen, sector * 4, keyType, key);
+    
+    if(auth) {
+        Serial.print("Authentication succeeded on sector ");
+        Serial.print(sector);
+        Serial.print(" with key ");
+        if(!keyType)
+            Serial.print("A :");
+        else
+            Serial.print("B :");
+        this->PrintHex(key, 6);
+        return true;
+    }
+    else {
+        Serial.print("Failed authentication on sector ");
+        Serial.print(sector);
+        Serial.print(" with key ");
+        if(!keyType)
+            Serial.print("A :");
+        else
+          Serial.print("B :");
+        this->PrintHex(key, 6);
+        Serial.println();
+        return false;
+  }
+}
+
+
+/**
+    @brief    write data on a block, and prints the result
+
+    @param    block  the block you are trying to write on
+    @param    data   the data you wish to write
+
+    @returns  1 if writing succeeded, 0 if it failed
+*/
+uint8_t MifareClassicKeyDuino::writeBlock(uint8_t block, uint8_t *data){
+    if (this->mifareclassic_WriteDataBlock (block, data)) {
+    	Serial.print("Succeeded writing on block ");
+    	Serial.print(block);
+    	Serial.print(" with data ");
+    	this->PrintHex(data, 16);
+    	Serial.println();
+    } else {
+    	Serial.print("Failed writing on block ");
+    	Serial.println(block);
+  }
+}
