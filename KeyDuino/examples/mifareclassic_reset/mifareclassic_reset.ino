@@ -78,15 +78,18 @@ void loop(void) {
                 int block = i * 4 + j;
                 if (block) //Be sure not to write on Block 0
                     if(keyDuino.mifareclassic_IsTrailerBlock(block))
-                        keyDuino.mifareclassic_WriteDataBlock(block, trailerBlockData);
+                        keyDuino.writeBlock(block, trailerBlockData);
                     else
-                        keyDuino.mifareclassic_WriteDataBlock(block, zeroData);
-                    delay(250);
+                        keyDuino.writeBlock(block, zeroData);
           }
         }
       }
     }
-    delay(6000);
+    delay(500);
+    Serial.println("Operation complete.");
+    Serial.println("Press a key for next operation.");
+    while (!Serial.available());
+    while (Serial.available()) Serial.read();
   }
 }
 
