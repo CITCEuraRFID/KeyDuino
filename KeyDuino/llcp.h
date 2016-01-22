@@ -10,11 +10,11 @@
 
 class LLCP {
 public:
-	LLCP(PN532Interface &interface) : link(interface) {
+    LLCP(PN532Interface &interface) : link(interface) {
         headerBuf = link.getHeaderBuffer(&headerBufLen);
         ns = 0;
         nr = 0;
-	};
+    };
 
 	/**
     * @brief    Actiave PN532 as a target
@@ -23,7 +23,7 @@ public:
     *           = 0     timeout
     *           < 0     failed
     */
-	int8_t activate(uint16_t timeout = 0);
+    int8_t activate(uint16_t timeout = 0);
 
     int8_t waitForConnection(uint16_t timeout = LLCP_DEFAULT_TIMEOUT);
 
@@ -60,16 +60,15 @@ public:
     };
 
 private:
-	MACLink link;
+    MACLink link;
     uint8_t mode;
-	uint8_t ssap;
-	uint8_t dsap;
+    uint8_t ssap;
+    uint8_t dsap;
     uint8_t *headerBuf;
     uint8_t headerBufLen;
     uint8_t ns;         // Number of I PDU Sent
     uint8_t nr;         // Number of I PDU Received
-
-	static uint8_t SYMM_PDU[2];
+    static uint8_t SYMM_PDU[2];
 };
 
 #endif // __LLCP_H__

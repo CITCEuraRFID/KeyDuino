@@ -43,7 +43,7 @@ int8_t LLCP::waitForConnection(uint16_t timeout)
     nr = 0;
 
     // Get CONNECT PDU
-    DMSG("wait for a CONNECT PDU\n");
+    DMSG("Waiting for a CONNECT PDU\n");
     do {
         if (2 > link.read(headerBuf, headerBufLen)) {
             return -1;
@@ -63,7 +63,7 @@ int8_t LLCP::waitForConnection(uint16_t timeout)
     } while (1);
 
     // Put CC PDU
-    DMSG("put a CC(Connection Complete) PDU to response the CONNECT PDU\n");
+    DMSG("Put a CC(Connection Complete) PDU to response the CONNECT PDU\n");
     ssap = getDSAP(headerBuf);
     dsap = getSSAP(headerBuf);
     headerBuf[0] = (dsap << 2) + ((PDU_CC >> 2) & 0x3);
@@ -80,7 +80,7 @@ int8_t LLCP::waitForDisconnection(uint16_t timeout)
     uint8_t type;
 
     // Get DISC PDU
-    DMSG("wait for a DISC PDU\n");
+    DMSG("Waiting for a DISC PDU\n");
     do {
         if (2 > link.read(headerBuf, headerBufLen)) {
             return -1;
@@ -100,7 +100,7 @@ int8_t LLCP::waitForDisconnection(uint16_t timeout)
     } while (1);
 
     // Put DM PDU
-    DMSG("put a DM(Disconnect Mode) PDU to response the DISC PDU\n");
+    DMSG("Put a DM(Disconnect Mode) PDU to response the DISC PDU\n");
     // ssap = getDSAP(headerBuf);
     // dsap = getSSAP(headerBuf);
     headerBuf[0] = (dsap << 2) + (PDU_DM >> 2);
@@ -142,7 +142,7 @@ int8_t LLCP::connect(uint16_t timeout)
     }
 
     // wait for a CC PDU
-    DMSG("wait for a CC PDU\n");
+    DMSG("Waiting for a CC PDU\n");
     do {
         if (2 > link.read(headerBuf, headerBufLen)) {
             return -1;
@@ -185,7 +185,7 @@ int8_t LLCP::disconnect(uint16_t timeout)
     }
 
     // wait for a DM PDU
-    DMSG("wait for a DM PDU\n");
+    DMSG("Waiting for a DM PDU\n");
     do {
         if (2 > link.read(headerBuf, headerBufLen)) {
             return -1;

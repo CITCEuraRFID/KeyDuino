@@ -5,12 +5,12 @@
 int8_t SNEP::write(const uint8_t *buf, uint8_t len, uint16_t timeout)
 {
 	if (0 >= llcp.activate(timeout)) {
-		DMSG("failed to activate PN532 as a target\n");
+		DMSG("Failed to activate PN532 as a target\n");
 		return -1;
 	}
 
 	if (0 >= llcp.connect(timeout)) {
-		DMSG("failed to set up a connection\n");
+		DMSG("Failed to set up a connection\n");
 		return -2;
 	}
 
@@ -51,12 +51,12 @@ int8_t SNEP::write(const uint8_t *buf, uint8_t len, uint16_t timeout)
 int16_t SNEP::read(uint8_t *buf, uint8_t len, uint16_t timeout)
 {
 	if (0 >= llcp.activate(timeout)) {
-		DMSG("failed to activate PN532 as a target\n");
+		DMSG("Failed to activate PN532 as a target\n");
 		return -1;
 	}
 
 	if (0 >= llcp.waitForConnection(timeout)) {
-		DMSG("failed to set up a connection\n");
+		DMSG("Failed to set up a connection\n");
 		return -2;
 	}
 
