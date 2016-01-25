@@ -51,6 +51,9 @@ void setup(void) {
   keyDuino.begin();
 
   keyDuino.SAMConfig();
+
+  while(!Serial){}
+  Serial.println("Waiting for a Mifare Classic tag to read.");
 }
 
 void loop(void) {
@@ -64,11 +67,22 @@ void loop(void) {
       keyDuino.PrintHex(uid, uidLength);
       
       for (int i = 0 ; i < 16 ; i++) { // 16 if card is Mifare 1K, 64 if Mifare 4K
-        if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) || keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) || keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i)) //Try authentication with defined key A, then B, then default keys
+	//Try authentication with defined key A, then B, then default keys. Writing won't work if key A has read-only access ... change checking order in that case (B then A).
+        if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) || 
+	    keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) || 
+	    keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i))
             keyDuino.readSector(i);       
       }
+      delay(500);
+      Serial.println("Operation complete.");
+      Serial.println("Press a key for next operation.");
+      while (!Serial.available());
+      while (Serial.available()) Serial.read();
+      Serial.println("Waiting for a Mifare Classic tag to read.");
+    } else {
+      Serial.println("Detected tag is not Mifare Classic.");
+      delay(500);
     }
-    delay(6000);
   }
 }
 

@@ -55,10 +55,11 @@ void setup(void) {
 
   keyDuino.SAMConfig();
   
-  Serial.println("/!\ Warning! /!\\");
+  while(!Serial){}
+  Serial.println("/!\\ Warning! /!\\");
   Serial.println("Be sure to know what you are doing when writing on a card!");
   Serial.println("Remember a wrong usage can lead you to make the card unusable ...");
-  Serial.println("/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\\");
+  Serial.println("/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\");
 }
 
 void loop(void) {
@@ -70,26 +71,30 @@ void loop(void) {
       Serial.println("Mifare classic identified");
       for (int i = 0 ; i < 16 ; i++)
       {
-        if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) || 
-            keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) || 
-            keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i)) //Try authentication with defined key A, then B, then default keys. Writing won't work if key A has read-only access ... change checking order in that case (B then A).
-        { 
-            for (int j = 0 ; j < 4 ; j++) {
-                int block = i * 4 + j;
-                if (block) //Be sure not to write on Block 0
-                    if(keyDuino.mifareclassic_IsTrailerBlock(block))
-                        keyDuino.writeBlock(block, trailerBlockData);
-                    else
-                        keyDuino.writeBlock(block, zeroData);
+	//Try authentication with defined key A, then B, then default keys. Writing won't work if key A has read-only access ... change checking order in that case (B then A).
+        if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) ||
+            keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) ||
+            keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i))
+        {
+          for (int j = 0 ; j < 4 ; j++) {
+            int block = i * 4 + j;
+            if (block) //Be sure not to write on Block 0
+              if (keyDuino.mifareclassic_IsTrailerBlock(block))
+                keyDuino.writeBlock(block, trailerBlockData);
+              else
+                keyDuino.writeBlock(block, zeroData);
           }
         }
       }
+      delay(500);
+      Serial.println("Operation complete.");
+      Serial.println("Press a key for next operation.");
+      while (!Serial.available());
+      while (Serial.available()) Serial.read();
+    } else {
+      Serial.println("Detected tag is not Mifare Classic.");
+      delay(500);
     }
-    delay(500);
-    Serial.println("Operation complete.");
-    Serial.println("Press a key for next operation.");
-    while (!Serial.available());
-    while (Serial.available()) Serial.read();
   }
 }
 
