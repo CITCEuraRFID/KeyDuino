@@ -1134,14 +1134,14 @@ uint8_t KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
 
 
 /**
-    @brief    read the mifare classic card ID
+    @brief    read the tag UID
 
-    @param    uid  the var to write the uid
+    @param    uid     the var to write the uid
     @param    uidLen  the var to write the uid
 
-    @returns  1 if the ID was correctly read, 0 if reading failed
+    @returns  1 if the UID was correctly read, 0 if reading failed
 */
-uint8_t MifareClassicKeyDuino::readTargetID(uint8_t *uid, uint8_t *uidLength){
+uint8_t KeyDuino::readTargetID(uint8_t *uid, uint8_t *uidLength){
     return readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, uidLength);
 }
 

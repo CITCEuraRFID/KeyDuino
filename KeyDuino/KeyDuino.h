@@ -151,6 +151,7 @@ public:
 
     // ISO14443A functions
     bool inListPassiveTarget();
+    uint8_t readTargetID(uint8_t *uid, uint8_t *uidLength);
     bool readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength, uint16_t timeout = 1000);
     bool inDataExchange(uint8_t *send, uint8_t sendLength, uint8_t *response, uint8_t *responseLength);
 
@@ -195,7 +196,7 @@ public:
     using KeyDuino::begin;
     using KeyDuino::SAMConfig;
     using KeyDuino::getFirmwareVersion;
-    using KeyDuino::readPassiveTargetID;
+    using KeyDuino::readTargetID;
     using KeyDuino::mifareclassic_IsFirstBlock;
     using KeyDuino::mifareclassic_IsTrailerBlock;
     using KeyDuino::mifareclassic_AuthenticateBlock;
@@ -207,7 +208,6 @@ public:
     using KeyDuino::PrintHex;
     using KeyDuino::PrintHexChar;
 
-    uint8_t readTargetID(uint8_t *uid, uint8_t *uidLength);
     void readSector(uint8_t sector);
     uint8_t authenticateDefinedKey(uint8_t key[6], int keyType, int sector);
     uint8_t writeBlock(uint8_t block, uint8_t *data);
