@@ -29,7 +29,7 @@ void setup() {
   pinMode(RELAY_4, OUTPUT);
 
   while (!Serial)
-    Serial.println("/!\\ Warning! /!\\");
+  Serial.println("/!\\ Warning! /!\\");
   Serial.println("Before going on, please check that all relay switches are OFF on the board, then press a key.");
   Serial.println("Otherwise, you may risk to harm the relay shield ...");
   Serial.println("/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\/!\\");
@@ -55,6 +55,7 @@ void loop() {
         changeRelaysState(HIGH);
         delay(2000);
         changeRelaysState(LOW);
+        delay(1000);
       } else {
         Serial.println("This is not the right tag.");
         delay(500);
@@ -75,7 +76,7 @@ void changeRelaysState(int state) {
 
 boolean UintArrayCompare(uint8_t a[], uint8_t b[], int array_size)
 {
-  for (int i = 0; i < array_size; ++i)
+  for (int i = 0; i < array_size; i++)
     if (a[i] != b[i])
       return (false);
   return (true);
