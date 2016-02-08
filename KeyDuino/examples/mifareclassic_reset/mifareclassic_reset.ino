@@ -64,7 +64,7 @@ void setup(void) {
 
 void loop(void) {
   uint8_t success;
-  success = keyDuino.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
+  success = keyDuino.readTargetID(uid, &uidLength);
 
   if (success) {
     if (uidLength == 4) {
