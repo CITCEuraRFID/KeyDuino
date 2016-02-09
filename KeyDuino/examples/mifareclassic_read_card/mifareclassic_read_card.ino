@@ -1,6 +1,8 @@
 #include <KeyDuino.h>
 
-//A-Keys Array
+//Defined keys arrays, in case you know the authentication of your Mifare Classic card.
+
+//Defined A-Keys Array
 uint8_t definedKeysA[16][6] = {
   { 0x48, 0x45, 0x58, 0x41, 0x43, 0x54 },
   { 0x48, 0x45, 0x58, 0x41, 0x43, 0x54 },
@@ -20,7 +22,7 @@ uint8_t definedKeysA[16][6] = {
   { 0x48, 0x45, 0x58, 0x41, 0x43, 0x54 }
 };
 
-//B-Keys Array
+// Defined B-Keys Array
 uint8_t definedKeysB[16][6] = {
   { 0xA2, 0x2A, 0xE1, 0x29, 0xC0, 0x13 },
   { 0x49, 0xFA, 0xE4, 0xE3, 0x84, 0x9F },
@@ -59,6 +61,7 @@ void setup(void) {
 void loop(void) {
   uint8_t success;
 
+  //Try to read card UID
   success = keyDuino.readTargetID(uid, &uidLength);
 
   if (success) {
@@ -67,7 +70,7 @@ void loop(void) {
       keyDuino.PrintHex(uid, uidLength);
       
       for (int i = 0 ; i < 16 ; i++) { // 16 if card is Mifare 1K, 64 if Mifare 4K
-	//Try authentication with defined key A, then B, then default keys. Writing won't work if key A has read-only access ... change checking order in that case (B then A).
+	//Try authentication with defined key A, then B, then default keys.
         if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) || 
 	    keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) || 
 	    keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i))

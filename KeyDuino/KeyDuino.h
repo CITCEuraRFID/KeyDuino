@@ -161,7 +161,6 @@ public:
     uint8_t mifareclassic_AuthenticateBlock (uint8_t *uid, uint8_t uidLen, uint32_t blockNumber, uint8_t keyNumber, uint8_t *keyData);
     uint8_t mifareclassic_AuthenticateSectorDefaultKeys (uint8_t sector);
     uint8_t mifareclassic_ReadDataBlock (uint8_t blockNumber, uint8_t *data);
-    void mifareclassic_ReadSector (uint8_t sector);
     uint8_t mifareclassic_WriteDataBlock (uint8_t blockNumber, uint8_t *data);
     uint8_t mifareclassic_FormatNDEF (void);
     uint8_t mifareclassic_WriteNDEFURI (uint8_t sectorNumber, uint8_t uriIdentifier, const char *url);
