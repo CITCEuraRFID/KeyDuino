@@ -1106,6 +1106,7 @@ uint8_t KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
         authentication = this->mifareclassic_AuthenticateBlock(this->_uid, this->_uidLen, 4 * sector, keyType, key); //First try with A key
         if (authentication)
             break;
+	//Re-read ID to allow to retry authentication
 	int reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
 	keyType = 1;
         authentication = this->mifareclassic_AuthenticateBlock(this->_uid, this->_uidLen, 4 * sector, keyType, key); //Then try with B key
@@ -1201,6 +1202,8 @@ uint8_t MifareClassicKeyDuino::authenticateDefinedKey(uint8_t key[6], int keyTyp
           Serial.print("B :");
         this->PrintHex(key, 6);
         Serial.println();
+	//Re-read ID to allow to retry authentication
+	int reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
         return false;
   }
 }
