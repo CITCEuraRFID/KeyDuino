@@ -1,6 +1,7 @@
 /*
-This sketch is made to be used with any NDEF device, to lock/unlock something.
+This sketch is made to be used with any NDEF active device, to lock/unlock something.
 The unlock is made with the reception of a plain text password through NDEF.
+Please note that it won't work with a passive NFC tag.
 
 Author: Raymond Borenstein - CITC-EuraRFID
 
@@ -18,14 +19,10 @@ KeyDuino keyDuino;
 SNEP nfc(keyDuino);
 uint8_t ndefBuf[128];
 
-#define BUZZER_PIN 15
 const String defined_password = "password"; //The unlocking password
 
 void setup() {
   Serial.begin(9600);
-
-  //Output definition
-  pinMode(BUZZER_PIN, OUTPUT);
 }
 
 //Format data to be sent as NDEF plain text
@@ -72,10 +69,7 @@ void loop() {
   //Loop reading NDEF messages
   while (content == "NULL") content = GET_NDEF();
 
-  //Short buzz
-  digitalWrite(BUZZER_PIN, 1);
-  delay(100);
-  digitalWrite(BUZZER_PIN, 0);
+  keyDuino.buzz(20);
   Serial.println("Content received: " + content);
 
   //If the received message is the password, then unlock
