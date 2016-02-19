@@ -44,7 +44,8 @@
                                       b = (b & 0xCC) >> 2 | (b & 0x33) << 2; \
                                       b = (b & 0xAA) >> 1 | (b & 0x55) << 1
 
-
+#define BUZZER_PIN 					  15
+									  
 /**************************************************************************/
 /*!
     @brief  Prints a hexadecimal value in plain characters
@@ -902,6 +903,7 @@ void KeyDuino::begin()
     _serial->begin(115200);
     wakeup();
     SAMConfig();
+	pinMode(BUZZER_PIN, OUTPUT);
 }
 
 void KeyDuino::wakeup()
@@ -1145,6 +1147,19 @@ uint8_t KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
 uint8_t KeyDuino::readTargetID(uint8_t *uid, uint8_t *uidLength){
     return readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, uidLength);
 }
+
+
+/**
+    @brief    buzz for specified duration
+
+    @param    duration     duration of the buzz
+*/
+void KeyDuino::buzz(int duration){
+	digitalWrite(BUZZER_PIN, HIGH);
+	delay(duration);
+	digitalWrite(BUZZER_PIN, LOW);
+}
+
 
 
 /**

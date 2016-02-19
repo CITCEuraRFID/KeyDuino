@@ -1,5 +1,4 @@
 #include "KeyDuino.h"
-#define BUZZER_PIN 15
 
 KeyDuino keyDuino;
 
@@ -10,11 +9,9 @@ void setup(void) {
   Serial.begin(115200);
   keyDuino.begin();
 
-  while(!Serial){delay(1);}
-  
   Serial.println("KeyDuino is ready, please scan a tag.");
 
-  pinMode(BUZZER_PIN, OUTPUT);
+
 }
 
 void loop(void) {
@@ -29,11 +26,6 @@ void loop(void) {
   delay(1);
 }
 
-void buzz(int duration){
-  digitalWrite(BUZZER_PIN, HIGH);
-  delay(duration);
-  digitalWrite(BUZZER_PIN, LOW);
-}
 
 
 
