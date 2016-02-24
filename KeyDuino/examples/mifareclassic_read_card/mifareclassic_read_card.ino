@@ -54,7 +54,6 @@ void setup(void) {
 
   keyDuino.SAMConfig();
 
-  while(!Serial){}
   Serial.println("Waiting for a Mifare Classic tag to read.");
 }
 

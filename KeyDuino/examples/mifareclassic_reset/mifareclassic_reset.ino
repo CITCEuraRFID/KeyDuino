@@ -55,7 +55,6 @@ void setup(void) {
 
   keyDuino.SAMConfig();
   
-  while(!Serial){}
   Serial.println("/!\\ Warning! /!\\");
   Serial.println("Be sure to know what you are doing when writing on a card!");
   Serial.println("Remember a wrong usage can lead you to make the card unusable ...");

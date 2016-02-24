@@ -20,7 +20,7 @@ void loop(void) {
   if (success){  
     Serial.print("Tag found: ");
     keyDuino.PrintHex(uid, uidLength);
-    buzz(20);
+    keyDuino.buzz(20);
     delay(250);
   }
   delay(1);
