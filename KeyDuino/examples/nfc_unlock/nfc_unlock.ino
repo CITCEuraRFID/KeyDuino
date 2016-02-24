@@ -22,7 +22,7 @@ uint8_t ndefBuf[128];
 const String defined_password = "password"; //The unlocking password
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 //Format data to be sent as NDEF plain text
