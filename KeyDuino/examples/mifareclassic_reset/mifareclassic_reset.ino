@@ -71,7 +71,7 @@ void loop(void) {
       for (int i = 0 ; i < 16 ; i++)
       {
 	//Try authentication with defined key A, then B, then default keys. Writing won't work if key A has read-only access ... change checking order in that case (B then A).
-        if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) ||
+        if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) || 
             keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) ||
             keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i))
         {

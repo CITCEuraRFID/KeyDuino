@@ -15,7 +15,7 @@ Join http://keyduino.forumsactifs.com/ to ask your questions, suggest your ideas
 KeyDuino keyDuino;
 
 uint8_t openingCode[] = { 
-  0xC0, 0xC0, 0x13, 0x37, 0x90, 0x00 }; //90 00 is the success code, you need to add it - the rest of the code is the same as the one defined in the HCE application
+  0xC0, 0xC0, 0x13, 0x37, 0x90, 0x00 }; //90 00 is the success code, you need to add it - the rest of the code is the same as the one defined in the HCE application
 
 void setup()
 {    

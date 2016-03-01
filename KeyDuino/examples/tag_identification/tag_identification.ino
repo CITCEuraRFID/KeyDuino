@@ -10,8 +10,6 @@ void setup(void) {
   keyDuino.begin();
 
   Serial.println("KeyDuino is ready, please scan a tag.");
-
-
 }
 
 void loop(void) {

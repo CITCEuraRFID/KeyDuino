@@ -70,7 +70,7 @@ void loop(void) {
       
       for (int i = 0 ; i < 16 ; i++) { // 16 if card is Mifare 1K, 64 if Mifare 4K
 	//Try authentication with defined key A, then B, then default keys.
-        if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) || 
+        if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) || 
 	    keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) || 
 	    keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i))
             keyDuino.readSector(i);       

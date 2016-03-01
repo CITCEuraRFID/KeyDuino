@@ -149,7 +149,7 @@ public:
 
     int16_t inRelease(const uint8_t relevantTarget = 0);
 
-	void buzz(int duration);
+    void buzz(int duration);
 	
     // ISO14443A functions
     bool inListPassiveTarget();
