@@ -14,16 +14,14 @@ void setup(void) {
 
 void loop(void) {
   uint8_t success;
+  String readID;
   success = keyDuino.readTargetID(uid, &uidLength);
-  if (success){  
+  if (success){
+    readID = keyDuino.convertUintToString(uid, uidLength); 
     Serial.print("Tag found: ");
-    keyDuino.PrintHex(uid, uidLength);
+    Serial.println(readID);
     keyDuino.buzz(20);
     delay(250);
   }
   delay(1);
 }
-
-
-
-
