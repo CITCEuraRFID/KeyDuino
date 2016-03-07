@@ -2,6 +2,7 @@
 The goal of this sketch is to unlock your computer (for example) with KeyDuino and a NFC tag.
 Get the ID of your tag, put it in NFC_KEY below, and set the PASSWORD of your computer.
 When you scan the tag with KeyDuino, it will enter your password automatically, as if you had typed it with your keyboard.
+More information in the video of the project: https://www.youtube.com/watch?v=TPVR7IkHJbM 
 Author: Mr Stein
 Revised by Raymond Borenstein - CITC-EuraRFID
 Compatible with KeyDuino 5.1

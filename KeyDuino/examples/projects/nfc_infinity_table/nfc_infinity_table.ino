@@ -3,6 +3,7 @@ This sketch is made to be used with any NDEF active device sending a color value
 This then sets the connected LEDs to the specified color.
 Please note that it won't work with a passive NFC tag.
 You will need NDEF library and FastLED ( https://github.com/FastLED/FastLED )
+More information in the video of the project: https://www.youtube.com/watch?v=mML4pEM4C_A
 Author: Mr Stein
 Revised by Raymond Borenstein - CITC-EuraRFID
 Compatible with KeyDuino 5.1

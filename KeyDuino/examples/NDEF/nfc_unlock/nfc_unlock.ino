@@ -2,6 +2,7 @@
 This sketch is made to be used with any NDEF active device, to lock/unlock something.
 The unlock is made with the reception of a plain text password through NDEF.
 Please note that it won't work with a passive NFC tag.
+More informations in the video of the project: https://www.youtube.com/watch?v=0NFij0T6PGA
 
 Author: Raymond Borenstein - CITC-EuraRFID
 

@@ -2,6 +2,7 @@
  The goal of this sketch is to unlock a "giftbox" with KeyDuino and a NFC tag, via a servomotor.
  Get the ID of your tag, put it in NFC_KEY below.
  When you scan the right tag with KeyDuino, the servo will unlock the box.
+ More information in the video of the project: https://www.youtube.com/watch?v=cIedvE9mYfM
  Author: Mr Stein
  Revised by Raymond Borenstein - CITC-EuraRFID
  Compatible with KeyDuino 5.1
