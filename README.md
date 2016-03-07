@@ -1,6 +1,6 @@
 ## KeyDuino Library
 
-Welcome on KeyDuino official GitHub repository!  
+Welcome to KeyDuino official GitHub repository!  
 Here you will find all the files you need to develop programs for your KeyDuino.  
 The library is still under development, and everything is not perfect yet!  
 That is why we would be very glad to hear from you about your experience with KeyDuino library ; if you encounter any problem, please feel free to open issues or contact us directly: that way we will be able to correct errors and improve the library.

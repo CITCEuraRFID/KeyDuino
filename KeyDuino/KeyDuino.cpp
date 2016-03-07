@@ -123,6 +123,28 @@ void KeyDuino::PrintHexChar(const uint8_t *data, const uint32_t numBytes)
 #endif
 }
 
+
+/**************************************************************************/
+/*!
+    @brief  Returns a hexadecimal value in plain characters
+
+    @param  data      Pointer to the uint8_t data
+    @param  numBytes  Data length in bytes
+
+    @returns  The data converted to a string
+*/
+/**************************************************************************/
+String KeyDuino::convertUintToString(const uint8_t *data, const uint8_t numBytes)
+{
+	String result;
+	for (uint8_t i=0; i < numBytes; i++) {
+	    if (data[i] < 0x10)
+            	result += "0";
+      	    result += String(data[i], HEX);
+	}
+    	return(result);
+}
+
 /**************************************************************************/
 /*!
     @brief  Checks the firmware version of the PN5xx chip
