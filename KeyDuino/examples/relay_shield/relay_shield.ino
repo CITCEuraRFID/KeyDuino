@@ -15,7 +15,7 @@ uint8_t uid[] = {
   0, 0, 0, 0, 0, 0, 0 };
 uint8_t uidLength;
 
-MifareClassicKeyDuino keyDuino;
+KeyDuino keyDuino;
 
 void changeRelaysState(int state);
 boolean UintArrayCompare(uint8_t a[], uint8_t b[], int array_size);
@@ -46,7 +46,7 @@ void loop() {
     Serial.print("Tag identified: UID: ");
     keyDuino.PrintHex(uid, uidLength);
 
-    if (!CHECK_ID ||  UintArrayCompare(RIGHT_UID, uid, uidLength)) {
+    if (!CHECK_ID || UintArrayCompare(RIGHT_UID, uid, uidLength)) {
       Serial.println("This is the right tag. Activating relays.");
       changeRelaysState(HIGH);
       delay(2000);

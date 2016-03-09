@@ -43,7 +43,7 @@ void Color_ALL(int RED, int GREEN, int BLUE)
   FastLED.show();
 }
 
-
+//Converting hexadecimal string to a decimal integer
 unsigned int hexToDec(String hexString) {
   unsigned int decValue = 0;
   int nextInt;
@@ -55,7 +55,6 @@ unsigned int hexToDec(String hexString) {
     nextInt = constrain(nextInt, 0, 15);
     decValue = (decValue * 16) + nextInt;
   }
-
   return decValue;
 }
 
@@ -91,7 +90,6 @@ void loop() {
   while(Color=="NULL") Color = GET_NDEF();
   Serial.println(Color);
 
-
   //The received NDEF message must be formatted "#RRGGBB", where RR is red level, GG green level, BB blue level
   String r_string = Color.substring(1,3);
   String g_string = Color.substring(3,5);
@@ -102,4 +100,3 @@ void loop() {
 
   Color_ALL(r,g,b);
 }
-

@@ -24,10 +24,10 @@ In this repository, you will find pretty much everything we develop for KeyDuino
 |   |   |   +---...  
 |   |   |  
 |   |   +---...  
-|   |   |  
+|   |    
 |   +---android_app           //The folder containing everything about Android application  
 |   |   +---nfc_talker.apk    //The apk of the Android application we developped  
-|   |   |  
+|   |    
 |   +---hardware              //All hardware files of KeyDuino  
 |   |   +---KeyDuino_board    //Hardware files for KeyDuino board  
 |   |   +---antenna           //Hardware files for KeyDuino remote antenna  
