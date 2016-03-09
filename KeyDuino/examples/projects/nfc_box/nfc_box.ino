@@ -17,8 +17,7 @@
 
 KeyDuino keyDuino;
 
-uint8_t uid[] = { 
-  0, 0, 0, 0, 0, 0, 0 };
+uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };
 uint8_t uidLength;
 
 Servo myServo;  // create servo object to control the servo
