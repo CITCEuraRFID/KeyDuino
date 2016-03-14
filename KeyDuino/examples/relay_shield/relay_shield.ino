@@ -8,7 +8,7 @@
 
 #define CHECK_ID true //Change to "true" if you want to check the good ID. If false, every tag will be accepted.
 
-uint8_t RIGHT_UID[4] = {0xFF, 0xFF, 0xFF, 0XFF, 0XFF, 0XFF, 0XFF }; //The tag UID you want to activate relays with.
+uint8_t RIGHT_UID[] = {0xFF, 0xFF, 0xFF, 0XFF, 0XFF, 0XFF, 0XFF }; //The tag UID you want to activate relays with.
 
 uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };
 uint8_t uidLength;
