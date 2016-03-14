@@ -10,16 +10,17 @@ Join http://keyduino.forumsactifs.com/ to ask your questions, suggest your ideas
 */
 
 #include <KeyDuino.h>
+#include <Keyboard.h>
 
 KeyDuino keyDuino;
 
 uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };
 uint8_t uidLength;
 
-String NFC_KEY_1 = "xxxx";
-String NFC_KEY_2 = "xxxx";
+String NFC_KEY_1 = "xxxxxxxxxxxxxx";
+String NFC_KEY_2 = "xxxxxxxxxxxxxx";
 
-String PASSWORD = "xxxxxxxx";
+String PASSWORD = "password\n"; //Printed with a qwerty layout, you can change characters in Keyboard.cpp if you need. \n is added to enter the password automatically.
 
 void setup(void) {
   Serial.begin(115200);
