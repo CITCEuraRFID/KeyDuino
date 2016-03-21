@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdint.h>
 
+//#define DEBUG
 
 #define HAL(func)   (this->func)
 #ifdef DEBUG
@@ -358,8 +359,8 @@ bool KeyDuino::readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *
     sens_res <<= 8;
     sens_res |= pn532_packetbuffer[3];
 
-    DMSG("ATQA: 0x");  DMSG_HEX(sens_res);
-    DMSG("SAK: 0x");  DMSG_HEX(pn532_packetbuffer[4]);
+    DMSG("\nATQA: 0x");  DMSG_HEX(sens_res);
+    DMSG("\nSAK: 0x");  DMSG_HEX(pn532_packetbuffer[4]);
     DMSG("\n");
 
     /* Card appears to be Mifare Classic */
@@ -925,7 +926,7 @@ void KeyDuino::begin()
     _serial->begin(115200);
     wakeup();
     SAMConfig();
-	pinMode(BUZZER_PIN, OUTPUT);
+    pinMode(BUZZER_PIN, OUTPUT);
 }
 
 void KeyDuino::wakeup()

@@ -6,8 +6,8 @@
 #include <stdint.h>
 #include <PN532Interface.h>
 
-#define KeyDuino_DEBUG
-#define KeyDuino_READ_TIMEOUT						(1000)
+#define DEBUG
+#define KeyDuino_READ_TIMEOUT				(1000)
 
 #define PN532_COMMAND_DIAGNOSE              (0x00)
 #define PN532_COMMAND_GETFIRMWAREVERSION    (0x02)
