@@ -211,7 +211,7 @@ bool KeyDuino::writeGPIO(uint8_t pinstate)
     pn532_packetbuffer[1] = PN532_GPIO_VALIDATIONBIT | pinstate;  // P3 Pins
     pn532_packetbuffer[2] = 0x00;    // P7 GPIO Pins (not used ... taken by I2C)
 
-    DMSG("Writing P3 GPIO: ");
+    DMSG_STR("Writing P3 GPIO: ");
     DMSG_HEX(pn532_packetbuffer[1]);
     DMSG("\n");
 
@@ -276,7 +276,7 @@ bool KeyDuino::SAMConfig(void)
     pn532_packetbuffer[2] = 0x14; // timeout 50ms * 20 = 1 second
     pn532_packetbuffer[3] = 0x01; // use IRQ pin!
 
-    DMSG("SAMConfig\n");
+    DMSG_STR("SAMConfig");
 
     if (HAL(writeCommand)(pn532_packetbuffer, 4))
         return false;
@@ -308,7 +308,7 @@ bool KeyDuino::setPassiveActivationRetries(uint8_t maxRetries)
     return (0 < HAL(readResponse)(pn532_packetbuffer, sizeof(pn532_packetbuffer)));
 }
 
-/***** ISO14443A Commands ******/
+/***** ISO14443 Commands ******/
 
 /**************************************************************************/
 /*!
@@ -330,11 +330,13 @@ bool KeyDuino::readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *
     pn532_packetbuffer[2] = cardbaudrate;
 
     if (HAL(writeCommand)(pn532_packetbuffer, 3)) {
+        DMSG_STR("\nFailed writing");
         return 0x0;  // command failed
     }
 
     // read data packet
     if (HAL(readResponse)(pn532_packetbuffer, sizeof(pn532_packetbuffer), timeout) < 0) {
+        DMSG_STR("\nFailed reading response");
         return 0x0;
     }
 
@@ -358,8 +360,8 @@ bool KeyDuino::readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *
     sens_res <<= 8;
     sens_res |= pn532_packetbuffer[3];
 
-    DMSG("ATQA: 0x");  DMSG_HEX(sens_res);
-    DMSG("SAK: 0x");  DMSG_HEX(pn532_packetbuffer[4]);
+    DMSG("\nATQA: 0x");  DMSG_HEX(sens_res);
+    DMSG("\nSAK: 0x");  DMSG_HEX(pn532_packetbuffer[4]);
     DMSG("\n");
 
     /* Card appears to be Mifare Classic */
@@ -368,8 +370,105 @@ bool KeyDuino::readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *
 
     for (uint8_t i = 0; i < pn532_packetbuffer[5]; i++) {
         uid[i] = pn532_packetbuffer[6 + i];
-	this->_uid[i] = pn532_packetbuffer[6 + i];
+	    this->_uid[i] = pn532_packetbuffer[6 + i];
     }
+    return 1;
+}
+
+/**************************************************************************/
+/*!
+    Waits for an ISO14443B target to enter the field
+
+    @param  cardBaudRate  Baud rate of the card
+    @param  uid           Pointer to the array that will be populated
+                          with the card's UID (up to 7 bytes)
+    @param  uidLength     Pointer to the variable that will hold the
+                          length of the card's UID.
+
+    @returns 1 if everything executed properly, 0 for an error
+*/
+/**************************************************************************/
+bool KeyDuino::readPassiveTargetID_B(uint8_t *uid, uint8_t *uidLength, uint16_t timeout)
+{
+    pn532_packetbuffer[0] = PN532_COMMAND_INLISTPASSIVETARGET;
+    pn532_packetbuffer[1] = 1;  // max 1 cards at once (we can set this to 2 later)
+    pn532_packetbuffer[2] = PN532_ISO14443B;
+    pn532_packetbuffer[3] = 0x00; //AFI
+
+    if (HAL(writeCommand)(pn532_packetbuffer, 4)) {
+        DMSG_STR("\nFailed writing");
+        return 0x0;  // command failed
+    }
+
+    // read data packet
+    if (HAL(readResponse)(pn532_packetbuffer, sizeof(pn532_packetbuffer), timeout) < 0) {
+        DMSG_STR("\nFailed reading response");
+        return 0x0;
+    }
+
+
+    /* ISO14443B card response should be in the following format:
+
+      byte                  Description
+      -------------         ------------------------------------------
+      b0                    Tags Found
+      b1                    Tag Number (only one used in this example)
+      b2..13                ATQB
+      b14                   ATTRIB_RES Length
+      b15..ATTRIB_RESLen    ATTRIB_RES[ ]
+    */
+
+    if (pn532_packetbuffer[0] != 1)
+        return 0;
+
+    uint8_t atqb[12];
+    DMSG("\nATQB: ");
+    if (pn532_packetbuffer[2] == 0x50) { //Normal situation
+        for (uint8_t i = 0; i < 12; i++) {
+            atqb[i] = pn532_packetbuffer[i+2];
+            DMSG_HEX(atqb[i]);
+        }
+    } else if (pn532_packetbuffer[3] == 0x50) { //Strange case 1
+        for (uint8_t i = 0; i < 12; i++) {
+            atqb[i] = pn532_packetbuffer[i+3];
+            DMSG_HEX(atqb[i]);
+        }
+    } else if (pn532_packetbuffer[4] == 0x50) { //Strange case 2
+        for (uint8_t i = 0; i < 12; i++) {
+            atqb[i] = pn532_packetbuffer[i+4];
+            DMSG_HEX(atqb[i]);
+        }
+    } else //In every other case, just let it go ...
+        return 0;
+
+    DMSG("\n");
+
+    DMSG("\ATTRIB_RES: ");
+    for (uint8_t i = 0; i < pn532_packetbuffer[14]; i++) {
+        DMSG_HEX(pn532_packetbuffer[15 + i]);
+    }
+    DMSG("\n");
+
+    /* ISO14443B ATQ_B format:
+
+      byte                  Description
+      -------------         ------------------------------------------
+      b0                    0x50
+      b1..4                 PUPI
+      b5..8                 Application Data
+      b9                    Bit Rate Capacity
+      b10                   Max Frame Size/-4 Info
+      b11                   FWI/Coding Options
+    */
+
+    *uidLength = 4;
+    this->_uidLen = 4;
+
+    for (uint8_t i = 0; i < 4; i++) {
+        uid[i] = atqb[1 + i];
+	    this->_uid[i] = atqb[1 + i];
+    }
+    
     return 1;
 }
 
@@ -1131,12 +1230,12 @@ uint8_t KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
         if (authentication)
             break;
 	//Re-read ID to allow to retry authentication
-	int reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
+	int reAuth = this->readPassiveTargetID(PN532_ISO14443A, this->_uid, &this->_uidLen);
 	keyType = 1;
         authentication = this->mifareclassic_AuthenticateBlock(this->_uid, this->_uidLen, 4 * sector, keyType, key); //Then try with B key
         if (authentication)
             break;
-	reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
+	reAuth = this->readPassiveTargetID(PN532_ISO14443A, this->_uid, &this->_uidLen);
     }
 
     if (authentication) {
@@ -1166,8 +1265,10 @@ uint8_t KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
 
     @returns  1 if the UID was correctly read, 0 if reading failed
 */
-uint8_t KeyDuino::readTargetID(uint8_t *uid, uint8_t *uidLength){
-    return readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, uidLength);
+uint8_t KeyDuino::readTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength){
+    if(cardbaudrate == PN532_ISO14443B)
+        return readPassiveTargetID_B(uid, uidLength);
+    return readPassiveTargetID(PN532_ISO14443A, uid, uidLength);
 }
 
 
@@ -1240,7 +1341,7 @@ uint8_t MifareClassicKeyDuino::authenticateDefinedKey(uint8_t key[6], int keyTyp
         this->PrintHex(key, 6);
         Serial.println();
 	//Re-read ID to allow to retry authentication
-	int reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
+	int reAuth = this->readPassiveTargetID(PN532_ISO14443A, this->_uid, &this->_uidLen);
         return false;
   }
 }

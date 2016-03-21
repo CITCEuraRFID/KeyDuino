@@ -6,8 +6,8 @@
 #include <stdint.h>
 #include <PN532Interface.h>
 
-#define KeyDuino_DEBUG
-#define KeyDuino_READ_TIMEOUT						(1000)
+#define DEBUG
+#define KeyDuino_READ_TIMEOUT				(1000)
 
 #define PN532_COMMAND_DIAGNOSE              (0x00)
 #define PN532_COMMAND_GETFIRMWAREVERSION    (0x02)
@@ -46,7 +46,8 @@
 #define PN532_RESPONSE_INLISTPASSIVETARGET  (0x4B)
 
 
-#define PN532_MIFARE_ISO14443A              (0x00)
+#define PN532_ISO14443A                     (0x00)
+#define PN532_ISO14443B              	    (0x03)
 
 // Mifare Commands
 #define MIFARE_CMD_AUTH_A                   (0x60)
@@ -151,10 +152,11 @@ public:
 
     void buzz(int duration);
 	
-    // ISO14443A functions
+    // ISO14443 functions
     bool inListPassiveTarget();
-    uint8_t readTargetID(uint8_t *uid, uint8_t *uidLength);
+    uint8_t readTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength);
     bool readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength, uint16_t timeout = 1000);
+    bool readPassiveTargetID_B(uint8_t *uid, uint8_t *uidLength, uint16_t timeout = 1000);
     bool inDataExchange(uint8_t *send, uint8_t sendLength, uint8_t *response, uint8_t *responseLength);
 
     // Mifare Classic functions
@@ -198,7 +200,6 @@ public:
     using KeyDuino::begin;
     using KeyDuino::SAMConfig;
     using KeyDuino::getFirmwareVersion;
-    using KeyDuino::readTargetID;
     using KeyDuino::mifareclassic_IsFirstBlock;
     using KeyDuino::mifareclassic_IsTrailerBlock;
     using KeyDuino::mifareclassic_AuthenticateBlock;
