@@ -381,7 +381,7 @@ bool KeyDuino::readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *
 
     @param  cardBaudRate  Baud rate of the card
     @param  uid           Pointer to the array that will be populated
-                          with the card's UID (up to 7 bytes)
+                          with the card's PUPI (normally 4 bytes)
     @param  uidLength     Pointer to the variable that will hold the
                           length of the card's UID.
 
@@ -410,56 +410,46 @@ bool KeyDuino::readPassiveTargetID_B(uint8_t *uid, uint8_t *uidLength, uint16_t 
     /* ISO14443B card response should be in the following format:
 
       byte                  Description
-      -------------         ------------------------------------------
+      ------------------    ------------------------------------------
       b0                    Tags Found
       b1                    Tag Number (only one used in this example)
       b2..13                ATQB
       b14                   ATTRIB_RES Length
-      b15..ATTRIB_RESLen    ATTRIB_RES[ ]
+      b15..ATTRIB_RESLen    ATTRIB_RES
     */
 
     if (pn532_packetbuffer[0] != 1)
         return 0;
 
+
+    /* ISO14443B ATQ_B format:
+
+      byte          Description
+      -----         ------------------------------------------
+      b0            0x50
+      b1..4         PUPI
+      b5..8         Application Data
+      b9            Bit Rate Capacity
+      b10           Max Frame Size/-4 Info
+      b11           FWI/Coding Options
+    */
+
     uint8_t atqb[12];
-    DMSG("\nATQB: ");
-    if (pn532_packetbuffer[2] == 0x50) { //Normal situation
+    DMSG("\nATQ_B: ");
+    if (pn532_packetbuffer[2] == 0x50) {        //Looking for the 0x50 to check if ATQ_B is well shaped
         for (uint8_t i = 0; i < 12; i++) {
             atqb[i] = pn532_packetbuffer[i+2];
             DMSG_HEX(atqb[i]);
         }
-    } else if (pn532_packetbuffer[3] == 0x50) { //Strange case 1
-        for (uint8_t i = 0; i < 12; i++) {
-            atqb[i] = pn532_packetbuffer[i+3];
-            DMSG_HEX(atqb[i]);
-        }
-    } else if (pn532_packetbuffer[4] == 0x50) { //Strange case 2
-        for (uint8_t i = 0; i < 12; i++) {
-            atqb[i] = pn532_packetbuffer[i+4];
-            DMSG_HEX(atqb[i]);
-        }
-    } else //In every other case, just let it go ...
+        DMSG("\n");
+    } else                                      //Sometimes there are remnant bytes, in that case just let it go ...
         return 0;
 
-    DMSG("\n");
-
-    DMSG("\ATTRIB_RES: ");
+    DMSG_STR("\nATTRIB_RES: ");
     for (uint8_t i = 0; i < pn532_packetbuffer[14]; i++) {
         DMSG_HEX(pn532_packetbuffer[15 + i]);
     }
     DMSG("\n");
-
-    /* ISO14443B ATQ_B format:
-
-      byte                  Description
-      -------------         ------------------------------------------
-      b0                    0x50
-      b1..4                 PUPI
-      b5..8                 Application Data
-      b9                    Bit Rate Capacity
-      b10                   Max Frame Size/-4 Info
-      b11                   FWI/Coding Options
-    */
 
     *uidLength = 4;
     this->_uidLen = 4;
@@ -870,16 +860,21 @@ bool KeyDuino::inDataExchange(uint8_t *send, uint8_t sendLength, uint8_t *respon
             peer acting as card/responder.
 */
 /**************************************************************************/
-bool KeyDuino::inListPassiveTarget()
+bool KeyDuino::inListPassiveTarget(uint8_t cardbaudrate)
 {
     pn532_packetbuffer[0] = PN532_COMMAND_INLISTPASSIVETARGET;
     pn532_packetbuffer[1] = 1;
-    pn532_packetbuffer[2] = 0;
+    pn532_packetbuffer[2] = cardbaudrate;
 
     DMSG("inList passive target\n");
 
-    if (HAL(writeCommand)(pn532_packetbuffer, 3)) {
-        return false;
+    if(cardbaudrate == PN532_ISO14443B){
+        pn532_packetbuffer[3] = 0x00;
+        if (HAL(writeCommand)(pn532_packetbuffer, 4))
+            return false;
+    } else {
+        if (HAL(writeCommand)(pn532_packetbuffer, 3))
+            return false;
     }
 
     int16_t status = HAL(readResponse)(pn532_packetbuffer, sizeof(pn532_packetbuffer), 30000);
@@ -1037,7 +1032,7 @@ void KeyDuino::wakeup()
 
     /** dump serial buffer */
     if(_serial->available()){
-        DMSG("Dump serial buffer: ");
+        DMSG("\nDump serial buffer: ");
     }
     while(_serial->available()){
         uint8_t ret = _serial->read();
@@ -1051,7 +1046,7 @@ int8_t KeyDuino::writeCommand(const uint8_t *header, uint8_t hlen, const uint8_t
 
     /** dump serial buffer */
     if(_serial->available()){
-        DMSG("Dump serial buffer: ");
+        DMSG("\nDump serial buffer: ");
     }
     while(_serial->available()){
         uint8_t ret = _serial->read();

@@ -153,7 +153,7 @@ public:
     void buzz(int duration);
 	
     // ISO14443 functions
-    bool inListPassiveTarget();
+    bool inListPassiveTarget(uint8_t cardbaudrate);
     uint8_t readTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength);
     bool readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength, uint16_t timeout = 1000);
     bool readPassiveTargetID_B(uint8_t *uid, uint8_t *uidLength, uint16_t timeout = 1000);
