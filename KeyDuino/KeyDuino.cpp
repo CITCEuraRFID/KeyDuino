@@ -822,20 +822,25 @@ bool KeyDuino::inDataExchange(uint8_t *send, uint8_t sendLength, uint8_t *respon
 {
     uint8_t i;
 
+    DMSG_STR("\ninDataEchange");
+
     pn532_packetbuffer[0] = 0x40; // PN532_COMMAND_INDATAEXCHANGE;
     pn532_packetbuffer[1] = inListedTag;
 
     if (HAL(writeCommand)(pn532_packetbuffer, 2, send, sendLength)) {
+        DMSG_STR("\nWrite error");
         return false;
     }
 
     int16_t status = HAL(readResponse)(response, *responseLength, 1000);
     if (status < 0) {
+        DMSG("\nStatus error: ");
+        DMSG_STR(status);
         return false;
     }
 
     if ((response[0] & 0x3f) != 0) {
-        DMSG("Status code indicates an error\n");
+        DMSG_STR("\nStatus code indicates an error");
         return false;
     }
 
@@ -866,7 +871,7 @@ bool KeyDuino::inListPassiveTarget(uint8_t cardbaudrate)
     pn532_packetbuffer[1] = 1;
     pn532_packetbuffer[2] = cardbaudrate;
 
-    DMSG("inList passive target\n");
+    DMSG_STR("\ninList passive target");
 
     if(cardbaudrate == PN532_ISO14443B){
         pn532_packetbuffer[3] = 0x00;
@@ -1092,7 +1097,7 @@ int8_t KeyDuino::writeCommand(const uint8_t *header, uint8_t hlen, const uint8_t
 int16_t KeyDuino::readResponse(uint8_t buf[], uint8_t len, uint16_t timeout)
 {
     uint8_t tmp[3];
-    
+
     DMSG("\nRead:  ");
     
     /** Frame Preamble and Start Code */
