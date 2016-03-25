@@ -1,3 +1,13 @@
+/*
+This sketch is made to be used with any ISO14443-A tag (like Mifare), to read its ID.
+
+Author: Raymond Borenstein - CITC-EuraRFID
+
+Compatible with KeyDuino 5.1
+
+Join http://keyduino.forumsactifs.com/ to ask your questions, suggest your ideas, and show your projects!
+*/
+
 #include "KeyDuino.h"
 
 KeyDuino keyDuino;

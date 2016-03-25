@@ -1,3 +1,15 @@
+/*
+This sketch is made to be used with a Mifare Classic card, and serves as an example to write its sectors.
+Be sure to know what you do before writing on your card.
+It uses the MifareClassicKeyDuino class, which is an extension of KeyDuino class, easing the learning with Mifare Classic.
+
+Author: Raymond Borenstein - CITC-EuraRFID
+
+Compatible with KeyDuino 5.1
+
+Join http://keyduino.forumsactifs.com/ to ask your questions, suggest your ideas, and show your projects!
+*/
+
 #include <KeyDuino.h>
 
 //A-Keys Array
