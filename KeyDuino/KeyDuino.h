@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <PN532Interface.h>
 
-#define DEBUG
+//#define DEBUG
 #define KeyDuino_READ_TIMEOUT				(1000)
 
 #define PN532_COMMAND_DIAGNOSE              (0x00)

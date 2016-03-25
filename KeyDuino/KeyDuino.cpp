@@ -822,7 +822,7 @@ bool KeyDuino::inDataExchange(uint8_t *send, uint8_t sendLength, uint8_t *respon
 {
     uint8_t i;
 
-    DMSG_STR("\ninDataEchange");
+    DMSG_STR("\ninDataExchange");
 
     pn532_packetbuffer[0] = 0x40; // PN532_COMMAND_INDATAEXCHANGE;
     pn532_packetbuffer[1] = inListedTag;
