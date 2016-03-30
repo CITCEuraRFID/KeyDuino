@@ -73,7 +73,7 @@ void loop(void) {
   uint8_t success;
 
   //Try to read card UID
-  success = keyDuino.readTargetID(uid, &uidLength);
+  success = keyDuino.readTargetID(PN532_ISO14443A, uid, &uidLength);
 
   if (success) {
     if (uidLength == 4) {
