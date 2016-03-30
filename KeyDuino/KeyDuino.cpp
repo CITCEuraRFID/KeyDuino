@@ -824,7 +824,7 @@ bool KeyDuino::inDataExchange(uint8_t *send, uint8_t sendLength, uint8_t *respon
 
     DMSG_STR("\ninDataExchange");
 
-    pn532_packetbuffer[0] = 0x40; // PN532_COMMAND_INDATAEXCHANGE;
+    pn532_packetbuffer[0] = PN532_COMMAND_INDATAEXCHANGE;
     pn532_packetbuffer[1] = inListedTag;
 
     if (HAL(writeCommand)(pn532_packetbuffer, 2, send, sendLength)) {
@@ -865,7 +865,7 @@ bool KeyDuino::inDataExchange(uint8_t *send, uint8_t sendLength, uint8_t *respon
             peer acting as card/responder.
 */
 /**************************************************************************/
-bool KeyDuino::inListPassiveTarget(uint8_t cardbaudrate)
+bool KeyDuino::inListPassiveTarget(uint8_t cardbaudrate, uint16_t timeout)
 {
     pn532_packetbuffer[0] = PN532_COMMAND_INLISTPASSIVETARGET;
     pn532_packetbuffer[1] = 1;
@@ -882,7 +882,7 @@ bool KeyDuino::inListPassiveTarget(uint8_t cardbaudrate)
             return false;
     }
 
-    int16_t status = HAL(readResponse)(pn532_packetbuffer, sizeof(pn532_packetbuffer), 30000);
+    int16_t status = HAL(readResponse)(pn532_packetbuffer, sizeof(pn532_packetbuffer), timeout);
     if (status < 0) {
         return false;
     }
@@ -895,6 +895,7 @@ bool KeyDuino::inListPassiveTarget(uint8_t cardbaudrate)
 
     return true;
 }
+
 
 int8_t KeyDuino::tgInitAsTarget(const uint8_t* command, const uint8_t len, const uint16_t timeout){
   

@@ -153,7 +153,7 @@ public:
     void buzz(int duration);
 	
     // ISO14443 functions
-    bool inListPassiveTarget(uint8_t cardbaudrate);
+    bool inListPassiveTarget(uint8_t cardbaudrate, uint16_t timeout = 30000);
     uint8_t readTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength);
     bool readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength, uint16_t timeout = 1000);
     bool readPassiveTargetID_B(uint8_t *uid, uint8_t *uidLength, uint16_t timeout = 1000);
@@ -200,6 +200,7 @@ public:
     using KeyDuino::begin;
     using KeyDuino::SAMConfig;
     using KeyDuino::getFirmwareVersion;
+    using KeyDuino::readTargetID;
     using KeyDuino::mifareclassic_IsFirstBlock;
     using KeyDuino::mifareclassic_IsTrailerBlock;
     using KeyDuino::mifareclassic_AuthenticateBlock;
