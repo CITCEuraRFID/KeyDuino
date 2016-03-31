@@ -46,7 +46,7 @@
 #define PN532_RESPONSE_INLISTPASSIVETARGET  (0x4B)
 
 
-#define PN532_ISO14443A                     (0x00)
+#define PN532_MIFARE_ISO14443A              (0x00)
 #define PN532_ISO14443B              	    (0x03)
 
 // Mifare Commands

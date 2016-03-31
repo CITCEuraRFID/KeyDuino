@@ -25,9 +25,9 @@ void setup(void) {
 void loop(void) {
   uint8_t success;
   String readID;
-  success = keyDuino.readTargetID(uid, &uidLength);
+  success = keyDuino.readTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
   if (success){
-    readID = keyDuino.convertUintToString(uid, uidLength); 
+    readID = keyDuino.convertUintToString(uid, uidLength);
     Serial.print("Tag found: ");
     Serial.println(readID);
     keyDuino.buzz(20);

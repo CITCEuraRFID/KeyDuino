@@ -34,7 +34,7 @@ void loop()
   Serial.println("Waiting for an HCE Application...");
 
   // set shield to inListPassiveTarget
-  success = keyDuino.inListPassiveTarget();
+  success = keyDuino.inListPassiveTarget(PN532_MIFARE_ISO14443A); //If it doesn't work with your device, you can try with PN532_ISO14443B
 
   if(success) {
 

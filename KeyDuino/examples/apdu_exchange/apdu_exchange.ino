@@ -15,7 +15,7 @@ Join http://keyduino.forumsactifs.com/ to ask your questions, suggest your ideas
 KeyDuino keyDuino;
 
 //APDU commands examples, you have to adapt depending on your card type and structure
-uint8_t SELECT_EF[] = { 0x00, 0xA4, 0x00, 0x00, 0xXX, 0xYY, 0xZZ };
+uint8_t SELECT_EF[] = { 0x00, 0xA4, 0x00, 0x00, 0x00, 0x00, 0x00 };
 uint8_t READ_RECORD[] = { 0x00, 0xB2, 0x01, 0x04, 0x00 };
 
 void setup(void) {

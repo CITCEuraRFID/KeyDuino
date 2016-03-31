@@ -45,7 +45,7 @@ void setup(void) {
 void loop(void) {
   uint8_t success;
   String readID;
-  success = keyDuino.readTargetID(uid, &uidLength);
+  success = keyDuino.readTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
   if (success){
     readID = keyDuino.convertUintToString(uid, uidLength);
 

@@ -312,8 +312,9 @@ bool KeyDuino::setPassiveActivationRetries(uint8_t maxRetries)
 /***** ISO14443 Commands ******/
 
 /**
-    @brief    read the tag UID
+    @brief    calls the right function to read the tag UID, according to type (cardbaudrate)
 
+    @param    cardbaudrate  Baud rate of the card
     @param    uid     the var to write the uid
     @param    uidLen  the var to write the uid
 
@@ -322,7 +323,7 @@ bool KeyDuino::setPassiveActivationRetries(uint8_t maxRetries)
 uint8_t KeyDuino::readTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength){
     if(cardbaudrate == PN532_ISO14443B)
         return readPassiveTargetID_B(uid, uidLength);
-    return readPassiveTargetID(PN532_ISO14443A, uid, uidLength);
+    return readPassiveTargetID(cardbaudrate, uid, uidLength);
 }
 
 
@@ -330,7 +331,7 @@ uint8_t KeyDuino::readTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidL
 /*!
     Waits for an ISO14443A target to enter the field
 
-    @param  cardBaudRate  Baud rate of the card
+    @param  cardbaudrate  Baud rate of the card
     @param  uid           Pointer to the array that will be populated
                           with the card's UID (up to 7 bytes)
     @param  uidLength     Pointer to the variable that will hold the
@@ -398,7 +399,6 @@ bool KeyDuino::readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *
 /*!
     Waits for an ISO14443B target to enter the field
 
-    @param  cardBaudRate  Baud rate of the card
     @param  uid           Pointer to the array that will be populated
                           with the card's PUPI (normally 4 bytes)
     @param  uidLength     Pointer to the variable that will hold the
@@ -1272,12 +1272,12 @@ uint8_t KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
         if (authentication)
             break;
 	//Re-read ID to allow to retry authentication
-	int reAuth = this->readPassiveTargetID(PN532_ISO14443A, this->_uid, &this->_uidLen);
+	int reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
 	keyType = 1;
         authentication = this->mifareclassic_AuthenticateBlock(this->_uid, this->_uidLen, 4 * sector, keyType, key); //Then try with B key
         if (authentication)
             break;
-	reAuth = this->readPassiveTargetID(PN532_ISO14443A, this->_uid, &this->_uidLen);
+	reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
     }
 
     if (authentication) {
@@ -1367,8 +1367,8 @@ uint8_t MifareClassicKeyDuino::authenticateDefinedKey(uint8_t key[6], int keyTyp
           Serial.print("B :");
         this->PrintHex(key, 6);
         Serial.println();
-	//Re-read ID to allow to retry authentication
-	int reAuth = this->readPassiveTargetID(PN532_ISO14443A, this->_uid, &this->_uidLen);
+	    //Re-read ID to allow to retry authentication
+	    int reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
         return false;
   }
 }
