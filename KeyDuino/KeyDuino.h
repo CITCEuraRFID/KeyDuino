@@ -187,7 +187,7 @@ protected:
     HardwareSerial* _serial;
     uint8_t command;
     int8_t readAckFrame();
-    uint8_t _uid[7];  // ISO14443A uid
+    uint8_t _uid[7];  // ISO14443 uid
     uint8_t _uidLen;  // uid len
     uint8_t _key[6];  // Mifare Classic key
     uint8_t inListedTag; // Tg number of inlisted tag.
