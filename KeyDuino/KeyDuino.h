@@ -47,6 +47,7 @@
 
 
 #define PN532_MIFARE_ISO14443A              (0x00)
+#define PN532_ISO14443B              	    (0x03)
 
 // Mifare Commands
 #define MIFARE_CMD_AUTH_A                   (0x60)
@@ -151,10 +152,11 @@ public:
 
     void buzz(int duration);
 	
-    // ISO14443A functions
-    bool inListPassiveTarget();
-    uint8_t readTargetID(uint8_t *uid, uint8_t *uidLength);
+    // ISO14443 functions
+    bool inListPassiveTarget(uint8_t cardbaudrate, uint16_t timeout = 30000);
+    uint8_t readTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength);
     bool readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidLength, uint16_t timeout = 1000);
+    bool readPassiveTargetID_B(uint8_t *uid, uint8_t *uidLength, uint16_t timeout = 1000);
     bool inDataExchange(uint8_t *send, uint8_t sendLength, uint8_t *response, uint8_t *responseLength);
 
     // Mifare Classic functions
@@ -185,7 +187,7 @@ protected:
     HardwareSerial* _serial;
     uint8_t command;
     int8_t readAckFrame();
-    uint8_t _uid[7];  // ISO14443A uid
+    uint8_t _uid[7];  // ISO14443 uid
     uint8_t _uidLen;  // uid len
     uint8_t _key[6];  // Mifare Classic key
     uint8_t inListedTag; // Tg number of inlisted tag.

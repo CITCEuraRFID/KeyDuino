@@ -1,6 +1,18 @@
+/*
+This sketch is made to be used with a Mifare Classic card, and serves as an example to read its sectors.
+It uses the MifareClassicKeyDuino class, which is an extension of KeyDuino class, easing the learning with Mifare Classic.
+
+Author: Raymond Borenstein - CITC-EuraRFID
+
+Compatible with KeyDuino 5.1
+
+Join http://keyduino.forumsactifs.com/ to ask your questions, suggest your ideas, and show your projects!
+*/
+
 #include <KeyDuino.h>
 
-//Defined keys arrays, in case you know the authentication of your Mifare Classic card.
+//Define here the keys of each sector of your Mifare Classic card, if you know them. 
+//Otherwise, only typical default keys will be used.
 
 //Defined A-Keys Array
 uint8_t definedKeysA[16][6] = {
@@ -61,7 +73,7 @@ void loop(void) {
   uint8_t success;
 
   //Try to read card UID
-  success = keyDuino.readTargetID(uid, &uidLength);
+  success = keyDuino.readTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
 
   if (success) {
     if (uidLength == 4) {
@@ -69,10 +81,10 @@ void loop(void) {
       keyDuino.PrintHex(uid, uidLength);
       
       for (int i = 0 ; i < 16 ; i++) { // 16 if card is Mifare 1K, 64 if Mifare 4K
-	//Try authentication with defined key A, then B, then default keys.
+        //Try authentication with defined key A, then B, then default keys.
         if (keyDuino.authenticateDefinedKey(definedKeysA[i], MIFARE_KEY_A, i) || 
-	    keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) || 
-	    keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i))
+	      keyDuino.authenticateDefinedKey(definedKeysB[i], MIFARE_KEY_B, i) || 
+	      keyDuino.mifareclassic_AuthenticateSectorDefaultKeys(i))
             keyDuino.readSector(i);       
       }
       delay(500);

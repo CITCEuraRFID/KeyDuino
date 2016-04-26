@@ -38,7 +38,7 @@ void setup() {
 
 void loop() {
   uint8_t success;
-  success = keyDuino.readTargetID(uid, &uidLength);
+  success = keyDuino.readTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
 
   if (success) {
     Serial.print("Tag identified: UID: ");
