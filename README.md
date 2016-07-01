@@ -29,6 +29,7 @@ In this repository, you will find pretty much everything we develop for KeyDuino
 |   |   +---nfc_talker.apk    //The apk of the Android application we developped  
 |   |    
 |   +---hardware              //All hardware files of KeyDuino  
+|   |   +---3D_printed_case   //STL files for 3D printed case
 |   |   +---KeyDuino_board    //Hardware files for KeyDuino board  
 |   |   +---antenna           //Hardware files for KeyDuino remote antenna  
 ```
