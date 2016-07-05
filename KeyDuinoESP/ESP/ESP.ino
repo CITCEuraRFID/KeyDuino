@@ -1,9 +1,9 @@
 /*
- * ESP-8266 that connects to a WiFi network and chats with an MQTT server (publish & subscribe)
- * It checks if the NFC tag ID is authorized and sends the response to the KeyDuino in order to enable actions... or not...
- * Wakes up periodically (configure SLEEP_DELAY_IN_SECONDS accordingly).
- * If you wish to enable deep_sleep for the ESP: 
- * Hookup guide:
+   ESP-8266 that connects to a WiFi network and chats with an MQTT server (publish & subscribe)
+   It checks if the NFC tag ID is authorized and sends the response to the KeyDuino in order to enable actions... or not...
+   Wakes up periodically (configure SLEEP_DELAY_IN_SECONDS accordingly).
+   If you wish to enable deep_sleep for the ESP:
+   Hookup guide:
   - connect D0 pin to RST pin in order to enable the ESP-8266 to wake up periodically
 */
 
@@ -31,7 +31,7 @@ const char* password = "YOUR WIFI PASSWORD";
 
 // MQTT setup
 const char* mqtt_server = "<YOUR MQTT SERVER ADDRESS>";
-const char* mqtt_username = "<A USERNAME>";            // used while connecting to the broker 
+const char* mqtt_username = "<A USERNAME>";            // used while connecting to the broker
 const char* mqtt_password = "";                        // leave empty if not needed
 const String mqtt_topic_syntax = "keyduino/nfc/";      // the first part of the MQTT topic, the mac address of the ESP is added automaticaly when creating the full topic
 char* mqtt_topic = "";
@@ -73,12 +73,14 @@ void loop() {
   destroyAccess();
   NFCID = "";
 
+  getID_Keyduino();
+
   if (!client.connected()) {
     reconnect();
   }
 
-  getID_Keyduino();
   sendID_MQTT();
+  
   verifyAccess();
 
   //Serial << "Closing MQTT connection..." << endl;
