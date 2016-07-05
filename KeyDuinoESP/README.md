@@ -1,7 +1,7 @@
 # KeyDuinoESP
 NFC enabled module in order to control authorized access via WiFi
-    - KeyDuino
-    - ESP-12
+- KeyDuino
+- ESP-12
 
 # Libraries used
 - ESP8266: https://github.com/esp8266/Arduino
