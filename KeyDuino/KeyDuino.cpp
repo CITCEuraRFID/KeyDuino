@@ -1268,17 +1268,17 @@ uint8_t KeyDuino::mifareclassic_AuthenticateSectorDefaultKeys(uint8_t sector){
         for (int j = 0 ; j < 6 ; j++) {
             key[j] = this->mifareClassicDefaultKeys[i][j];
         }
-	keyType = 0;
+        //Re-read ID to allow to retry authentication
+	    int reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
+	    keyType = 0;
         authentication = this->mifareclassic_AuthenticateBlock(this->_uid, this->_uidLen, 4 * sector, keyType, key); //First try with A key
         if (authentication)
             break;
-	//Re-read ID to allow to retry authentication
-	int reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
-	keyType = 1;
+	    reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
+	    keyType = 1;
         authentication = this->mifareclassic_AuthenticateBlock(this->_uid, this->_uidLen, 4 * sector, keyType, key); //Then try with B key
         if (authentication)
             break;
-	reAuth = this->readPassiveTargetID(PN532_MIFARE_ISO14443A, this->_uid, &this->_uidLen);
     }
 
     if (authentication) {
