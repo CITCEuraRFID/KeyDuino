@@ -25,13 +25,15 @@ int access = 0;
 String NFCID;
 char message_buff[100];
 
+// WiFi setup
 const char* ssid = "<YOUR WIFI NETWORK SSID>";
 const char* password = "YOUR WIFI PASSWORD";
 
+// MQTT setup
 const char* mqtt_server = "<YOUR MQTT SERVER ADDRESS>";
-const char* mqtt_username = "<A USERNAME>"; // used for connecting to the broker 
-const char* mqtt_password = ""; // leave empty if not needed
-const String mqtt_topic_syntax = "keyduino/nfc/"; // the first part of the MQTT topic, the mac address of the ESP is added automaticaly
+const char* mqtt_username = "<A USERNAME>";            // used while connecting to the broker 
+const char* mqtt_password = "";                        // leave empty if not needed
+const String mqtt_topic_syntax = "keyduino/nfc/";      // the first part of the MQTT topic, the mac address of the ESP is added automaticaly when creating the full topic
 char* mqtt_topic = "";
 char* mqtt_topic_access = "";
 char* mqtt_payload = "";
@@ -40,7 +42,7 @@ boolean retained = false;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-SoftwareSerial mySerial(RX, TX);  //RX, TX to be defined
+SoftwareSerial mySerial(RX, TX);  // RX, TX to be defined
 
 void setup() {
   // setup serial port
@@ -64,11 +66,11 @@ void setup() {
 
   // sending "connected" to broker
   client.publish(mqtt_topic, "connected", retained);
-
 }
 
 void loop() {
   Serial << endl << "---------- Starting LOOP ----------" << endl;
+  destroyAccess();
   NFCID = "";
 
   if (!client.connected()) {
@@ -77,7 +79,6 @@ void loop() {
 
   getID_Keyduino();
   sendID_MQTT();
-  Serial << "--- Waiting 3 seconds for server response ---" << endl;
   verifyAccess();
 
   //Serial << "Closing MQTT connection..." << endl;
@@ -95,13 +96,3 @@ void loop() {
 
   Serial << "---------- Ending LOOP ----------" << endl;
 }
-
-
-
-
-
-
-
-
-
-

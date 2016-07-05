@@ -27,10 +27,10 @@ char* createMqtt_topic(String mqtt_topic_syntax) {
 }
 
 char* createMqtt_topic_access(String mqtt_topic_syntax) {
-  String clientMac = mqtt_topic_syntax+"access/";
+  String clientMac = mqtt_topic_syntax;
   unsigned char mac[6];
   WiFi.macAddress(mac);
-  clientMac += macToStr(mac);
+  clientMac += macToStr(mac)+"/access";
   return strToChar(clientMac);
 }
 
