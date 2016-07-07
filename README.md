@@ -24,7 +24,11 @@ In this repository, you will find pretty much everything we develop for KeyDuino
 |   |   |   +---...  
 |   |   |  
 |   |   +---...  
-|   |    
+|   |
+|   +---KeyDuinoESP           //An implementation of KeyDuino with ESP module for WiFi communication  
+|   |   +---ESP               //Files for the ESP  
+|   |   +---KeyDuino          //Files for the KeyDuino  
+|   |  
 |   +---android_app           //The folder containing everything about Android application  
 |   |   +---nfc_talker.apk    //The apk of the Android application we developped  
 |   |    
